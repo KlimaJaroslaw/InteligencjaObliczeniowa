@@ -13,6 +13,9 @@ Celem testów było porównanie wydajności i skuteczności trzech wariantów al
 *   **Negamax z odcięciem Alfa-Beta (AB)** – matematyczna optymalizacja, która eliminuje konieczność sprawdzania gałęzi drzewa niebędących w stanie wpłynąć na ostateczną decyzję. Dzięki utrzymywaniu granic dopuszczalnych wartości (alfa i beta), algorytm "odcina" ścieżki, o których już wiadomo, że prowadzą do wyników gorszych niż te wcześniej znalezione. Jest to optymalizacja bezstratna – zwraca identyczny wynik jak pełny Negamax, ale w znacznie krótszym czasie.
 *   **Expectiminimax** – zaawansowane rozszerzenie dedykowane dla gier probabilistycznych, czyli takich, w których występuje element losowy (np. rzut kostką, rozdanie kart). Wprowadza on dodatkowe "węzły szansy" (chance nodes), w których nie wybieramy najlepszego ruchu, lecz obliczamy wartość oczekiwaną (średnią ważoną) wszystkich możliwych wyników losowych. Pozwala to algorytmowi ocenić ryzyko i wybierać ruchy statystycznie najkorzystniejsze w warunkach niepewności.
 
+
+Eksperymenty można wykonać uruchamiając plik: **experiments.py**
+
 ---
 
 ## 2. Wyniki: Negamax vs Negamax Alfa-Beta (Zadanie 6 pkt)
