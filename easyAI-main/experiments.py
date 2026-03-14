@@ -5,7 +5,6 @@ import time
 
 
 def run_single_experiment(num_games, ai1, ai2, name1, name2, probabilistic):
-    """Uruchamia pojedynczy eksperyment."""
     wins = {name1: 0, name2: 0}
     times = {name1: [], name2: []}
     total_moves = 0
@@ -52,7 +51,6 @@ def run_single_experiment(num_games, ai1, ai2, name1, name2, probabilistic):
 
 
 def main_6pt():
-    """Eksperymenty na 6 punktów - porównanie Negamax z/bez alfa-beta."""
     scoring = lambda game: -100 if game.lose() else 0
     num_games = 20
     
@@ -88,7 +86,7 @@ def main_6pt():
 def main_8pt():
     """Eksperymenty na 8 punktów - dodanie Expectiminimax."""
     scoring = lambda game: -100 if game.lose() else 0
-    num_games = 15  # Mniej gier, bo Expectimax jest wolniejszy
+    num_games = 15 
     
     print("\n" + "=" * 60)
     print("ZADANIE NA 8 PUNKTÓW - EXPECTIMINIMAX")
@@ -133,7 +131,6 @@ def main():
             print("  6 - eksperymenty na 6 punktów (Negamax)")
             print("  8 - eksperymenty na 8 punktów (Expectiminimax)")
     else:
-        # Domyślnie uruchom wszystko
         main_6pt()
         main_8pt()
 
