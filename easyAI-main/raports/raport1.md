@@ -7,10 +7,11 @@ Hexspawn to determinstyczna gra dwuosobowa przypominająca szachy, która odbywa
 ## Przeprowadzone Eksperymenty
 
 ## 1. Cel eksperymentów
-Celem testów było porównanie wydajności i skuteczności trzech wariantów algorytmów:
-*   **Negamax** – wersja podstawowa (brute-force).
-*   **Negamax z odcięciem Alfa-Beta (AB)** – optymalizacja ograniczająca liczbę odwiedzanych węzłów.
-*   **Expectiminimax** – algorytm dedykowany dla gier probabilistycznych, uwzględniający węzły losowe (chance nodes).
+Celem testów było porównanie wydajności i skuteczności trzech wariantów algorytmów przeszukiwania drzewa gry, zorientowanych na podejmowanie optymalnych decyzji w grach dwuosobowych o sumie zerowej:
+
+*   **Negamax** – wersja podstawowa algorytmu Minimax, oparta na założeniu, że max(a, b) = min(-a, -b). Pozwala to na uproszczenie implementacji poprzez stosowanie tej samej logiki dla obu graczy (każdy dąży do maksymalizacji własnego wyniku, który jest negacją wyniku przeciwnika). Służy on jako punkt odniesienia (baseline) dla pozostałych metod.
+*   **Negamax z odcięciem Alfa-Beta (AB)** – matematyczna optymalizacja, która eliminuje konieczność sprawdzania gałęzi drzewa niebędących w stanie wpłynąć na ostateczną decyzję. Dzięki utrzymywaniu granic dopuszczalnych wartości (alfa i beta), algorytm "odcina" ścieżki, o których już wiadomo, że prowadzą do wyników gorszych niż te wcześniej znalezione. Jest to optymalizacja bezstratna – zwraca identyczny wynik jak pełny Negamax, ale w znacznie krótszym czasie.
+*   **Expectiminimax** – zaawansowane rozszerzenie dedykowane dla gier probabilistycznych, czyli takich, w których występuje element losowy (np. rzut kostką, rozdanie kart). Wprowadza on dodatkowe "węzły szansy" (chance nodes), w których nie wybieramy najlepszego ruchu, lecz obliczamy wartość oczekiwaną (średnią ważoną) wszystkich możliwych wyników losowych. Pozwala to algorytmowi ocenić ryzyko i wybierać ruchy statystycznie najkorzystniejsze w warunkach niepewności.
 
 ---
 
@@ -26,6 +27,15 @@ Celem testów było porównanie wydajności i skuteczności trzech wariantów al
 1.  **Potęga Alfa-Beta:** Zastosowanie odcięć skróciło czas obliczeń blisko **8-krotnie** (z ~39ms do ~5ms) przy zachowaniu identycznej jakości ruchów.
 2.  **Sufit strategiczny:** Wynik 10:10 między głębokością 5 a 10 sugeruje, że gra przy głębokości 5 jest już "rozwiązana" – dalsze przeszukiwanie nie zmienia decyzji, a jedynie wydłuża czas.
 3.  **Determinizm:** Idealnie równy podział wygranych wynika z braku losowości i naprzemiennego rozpoczynania partii.
+
+### Środowisko Probabilistyczne (20 gier)
+| Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
+| :--- | :--- | :---: | :---: | :---: |
+| Negamax-5-AB | Negamax-5 | 9 : 11 | 5.43 ms | 41.75 ms |
+| Negamax-10-AB | Negamax-5 | 11 : 9 | 66.82 ms | 38.48 ms |
+
+**Wnioski:**
+1. **Wariacja:** Widać, że liczba wygranych nie jest równa co oznacza, że nie ma gwarancji wygranej znając kilka ruchów do przodu.
 
 ---
 
