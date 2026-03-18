@@ -1,4 +1,5 @@
 # Raport 1: OctoSpawn
+Jarosław Klima, Paweł Knot
 
 ## Opis gry
 Hexspawn to determinstyczna gra dwuosobowa przypominająca szachy, która odbywa się na planszy 3x3. Wszystkie pionki poruszają się jak piony w szachach i wygrywa gracz, który albo dotrze do rzędu przeciwnika jednym ze swoich pionów, albo pozostawi go bez możliwych ruchów do wykonania. Octospawn to wersja tej gry, w której plansza ma wymiary 4x4. Obie te gry są grami rozwiązanymi, i w hexspawn gracz biały zawsze przegra po 3 turach przy optymalnej rozgrywce.
@@ -18,7 +19,28 @@ Eksperymenty można wykonać uruchamiając plik: **experiments.py**
 
 ---
 
-## 2. Wyniki: Negamax vs Negamax Alfa-Beta (Zadanie 6 pkt)
+## 2. Wyniki: Negamax z różnymi głębokościami (Zadanie 4 pkt)
+
+### Środowisko deterministyczne (50 gier)
+| Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
+| :--- | :--- | :---: | :---: | :---: |
+| Negamax-1 | Negamax-5 | 0 : 50 | 0.22 ms | 5.20 ms |
+| Negamax-5 | Negamax-10 | 25 : 25 | 4.89 ms | 60.45 ms |
+
+**Wnioski:**
+1.  **Sufit strategiczny:** Wynik 25:25 między głębokością 5 a 10 sugeruje, że gra przy głębokości 5 jest już "rozwiązana" – dalsze przeszukiwanie nie zmienia decyzji, a jedynie wydłuża czas.
+2.  **Determinizm:** Idealnie równy podział wygranych wynika z braku losowości i naprzemiennego rozpoczynania partii.
+
+### Środowisko probabilistyczne (50 gier)
+| Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
+| :--- | :--- | :---: | :---: | :---: |
+| Negamax-1 | Negamax-5 | 0 : 50 | 0.23 ms | 5.69 ms |
+| Negamax-5 | Negamax-10 | 20 : 30 | 6.33 ms | 81.14 ms |
+
+**Wnioski:**
+1. **Niedeterminizm:** Widać, że po dodaniu losowości lepiej radzi sobie gracz w większą głębkością.
+
+## 3. Wyniki: Negamax vs Negamax Alfa-Beta (Zadanie 6 pkt)
 
 ### Środowisko Deterministyczne (20 gier)
 | Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
@@ -28,30 +50,25 @@ Eksperymenty można wykonać uruchamiając plik: **experiments.py**
 
 **Wnioski:**
 1.  **Potęga Alfa-Beta:** Zastosowanie odcięć skróciło czas obliczeń blisko **8-krotnie** (z ~39ms do ~5ms) przy zachowaniu identycznej jakości ruchów.
-2.  **Sufit strategiczny:** Wynik 10:10 między głębokością 5 a 10 sugeruje, że gra przy głębokości 5 jest już "rozwiązana" – dalsze przeszukiwanie nie zmienia decyzji, a jedynie wydłuża czas.
-3.  **Determinizm:** Idealnie równy podział wygranych wynika z braku losowości i naprzemiennego rozpoczynania partii.
 
 ### Środowisko Probabilistyczne (20 gier)
 | Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
 | :--- | :--- | :---: | :---: | :---: |
-| Negamax-5-AB | Negamax-5 | 9 : 11 | 5.43 ms | 41.75 ms |
-| Negamax-10-AB | Negamax-5 | 11 : 9 | 66.82 ms | 38.48 ms |
-
-**Wnioski:**
-1. **Wariacja:** Widać, że liczba wygranych nie jest równa co oznacza, że nie ma gwarancji wygranej znając kilka ruchów do przodu.
+| Negamax-5-AB | Negamax-5 | 10 : 10 | **5.28 ms** | 41.77 ms |
+| Negamax-10-AB | Negamax-5 | 12 : 8 | 72.55 ms | 41.51 ms |
 
 ---
 
-## 3. Wyniki: Expectiminimax (Zadanie 8 pkt)
+## 4. Wyniki: Expectiminimax (Zadanie 8 pkt)
 
-### Środowisko Deterministyczne (Expectimax działa jak Negamax)
+### Środowisko Deterministyczne (15 gier)
 | Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
 | :--- | :--- | :---: | :---: | :---: |
 | Negamax-6-AB | Expectimax-6-AB | 8 : 7 | **8.01 ms** | 14.39 ms |
 
 *Expectimax w grach deterministycznych wykazuje niewielki narzut czasowy (overhead) wynikający z dodatkowego sprawdzania warunków probabilistycznych, ale gra na tym samym poziomie co Negamax.*
 
-### Środowisko Probabilistyczne (Kluczowy test)
+### Środowisko Probabilistyczne (15 gier)
 | Algorytm A | Algorytm B | Wynik (A:B) | Śr. czas A | Śr. czas B |
 | :--- | :--- | :---: | :---: | :---: |
 | Negamax-6-AB | **Expectimax-6-AB** | 6 : **9** | **8.58 ms** | 488.05 ms |
@@ -64,7 +81,7 @@ Eksperymenty można wykonać uruchamiając plik: **experiments.py**
 
 ---
 
-## 4. Podsumowanie
+## 5. Podsumowanie
 *   **Optymalizacja Alfa-Beta** drastycznie zwiększa zasięg czasowy algorytmu bez wpływu na jego logikę.
 *   **Expectiminimax** jest niezbędny w grach z elementem losowym, aby grać skuteczniej niż standardowy Minimax, jednak kosztem bardzo dużego zapotrzebowania na moc obliczeniową.
 *   W małych grach deterministycznych wyższa głębokość nie zawsze gwarantuje zwycięstwo, jeśli algorytm o mniejszej głębokości już gra optymalnie.

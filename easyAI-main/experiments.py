@@ -50,12 +50,44 @@ def run_single_experiment(num_games, ai1, ai2, name1, name2, probabilistic):
     return wins, times, total_moves / num_games
 
 
+def main_4pt():
+    scoring = lambda game: -100 if game.lose() else 0
+    num_games = 50
+    
+    print("=" * 60)
+    print("ZADANIE NA 4 PUNKTÓW - NEGAMAX")
+    print("=" * 60)
+    
+    ai_list = [
+        (Negamax(1, scoring), "Negamax-1"),
+        (Negamax(5, scoring), "Negamax-5"),
+        (Negamax(10, scoring), "Negamax-10"),
+    ]
+    
+    print("\n### DETERMINISTYCZNE ###")
+    for i in range(len(ai_list)):
+        for j in range(i+1, len(ai_list)):
+            run_single_experiment(
+                num_games, ai_list[i][0], ai_list[j][0],
+                ai_list[i][1], ai_list[j][1], False
+            )
+    
+    print("\n### PROBABILISTYCZNE ###")
+    for i in range(len(ai_list)):
+        for j in range(i+1, len(ai_list)):
+            run_single_experiment(
+                num_games, ai_list[i][0], ai_list[j][0],
+                ai_list[i][1], ai_list[j][1], True
+            )
+    
+    print("\n" + "=" * 60)
+
 def main_6pt():
     scoring = lambda game: -100 if game.lose() else 0
     num_games = 20
     
     print("=" * 60)
-    print("ZADANIE NA 6 PUNKTÓW - NEGAMAX")
+    print("ZADANIE NA 6 PUNKTÓW - NEGAMAX AB")
     print("=" * 60)
     
     ai_list = [
@@ -84,9 +116,8 @@ def main_6pt():
 
 
 def main_8pt():
-    """Eksperymenty na 8 punktów - dodanie Expectiminimax."""
     scoring = lambda game: -100 if game.lose() else 0
-    num_games = 15 
+    num_games = 15
     
     print("\n" + "=" * 60)
     print("ZADANIE NA 8 PUNKTÓW - EXPECTIMINIMAX")
@@ -122,6 +153,8 @@ def main():
     import sys
     
     if len(sys.argv) > 1:
+        if sys.argv[1] == "4":
+            main_4pt()
         if sys.argv[1] == "6":
             main_6pt()
         elif sys.argv[1] == "8":
@@ -131,6 +164,7 @@ def main():
             print("  6 - eksperymenty na 6 punktów (Negamax)")
             print("  8 - eksperymenty na 8 punktów (Expectiminimax)")
     else:
+        main_4pt()
         main_6pt()
         main_8pt()
 
