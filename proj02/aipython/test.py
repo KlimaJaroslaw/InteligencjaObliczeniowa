@@ -35,18 +35,24 @@ def gripper_heuristic(state, goal):
             
     return h
 
-def test_blocks_world():
-    # print("\n--- Testowanie Świata Klocków (blocks2 - 4 klocki) ---")
-    # print(SearcherMPP(Forward_STRIPS(blocks2)).search())
-    # print("-------------------------")
-    # print(SearcherMPP(Forward_STRIPS(problem1)).search())
-    print("\n--- Gripper problem bez heurystyki ---")
+def test_problems():
+    print("\n--- BlockWorld problem ---")
+    print(SearcherMPP(Forward_STRIPS(blocks2)).search())
+    print("--- Robot problem---")
+    print(SearcherMPP(Forward_STRIPS(problem1)).search())
+    print("\n--- Monkey problem ---")
+    print(SearcherMPP(Forward_STRIPS(monkey_problem)).search())
+def test_heuristic():
+    
+    print("\n--- Gripper problem without heuristics ---")
     print(SearcherMPP(Forward_STRIPS(gripper_problem)).search())
-    print("\n--- Gripper problem z heurystyką ---")
+    print("\n--- Gripper problem with heuristics ---")
     print(SearcherMPP(Forward_STRIPS(gripper_problem,gripper_heuristic)).search())
-    # print("\n--- Monkey problem ---")
-    # print(SearcherMPP(Forward_STRIPS(monkey_problem)).search())
+
 
 if __name__ == "__main__":
-    test_blocks_world()
-
+    print("Zadanie 1 --- ( 4 pkt )")
+    test_problems()
+    test_heuristic()
+    print("\n\n Zadanie 2 --- (6 pkt)")
+    
