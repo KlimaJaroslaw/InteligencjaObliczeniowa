@@ -128,3 +128,68 @@ blocks3 = Planning_problem(blocks2dom,
      tower4, # initial state
      {on('d'):'a', on('a'):'b', on('b'):'c'})  #goal
 
+
+def create_gripper_world(num_balls=4):
+    balls = [f'ball{i}' for i in range(1, num_balls + 1)]
+    rooms = {'roomA', 'roomB'}
+    grippers = {'left', 'right'}
+    
+    actions = set()
+    
+    for r_from in rooms:
+        for r_to in rooms:
+            if r_from != r_to:
+                actions.add(Strips(f'move_{r_from}_{r_to}', 
+                                   {'rob_at': r_from}, 
+                                   {'rob_at': r_to}))
+    
+    for b in balls:
+        for r in rooms:
+            for g in grippers:
+                actions.add(Strips(f'pick_{b}_{g}_{r}',
+                                   {'rob_at': r, f'at_{b}': r, f'free_{g}': True},
+                                   {f'at_{b}': g, f'free_{g}': False}))
+                actions.add(Strips(f'drop_{b}_{g}_{r}',
+                                   {'rob_at': r, f'at_{b}': g},
+                                   {f'at_{b}': r, f'free_{g}': True}))
+    
+    feature_domain = {'rob_at': rooms}
+    for b in balls:
+        feature_domain[f'at_{b}'] = rooms | grippers
+    for g in grippers:
+        feature_domain[f'free_{g}'] = {True, False}
+        
+    return STRIPS_domain(feature_domain, actions)
+
+gripper_dom = create_gripper_world(4)
+initial_gripper = {'rob_at': 'roomA', 'free_left': True, 'free_right': True}
+initial_gripper.update({f'at_ball{i}': 'roomA' for i in range(1, 5)})
+
+gripper_problem = Planning_problem(gripper_dom,
+    initial_gripper,
+    {'at_ball1': 'roomB', 'at_ball2': 'roomB', 'at_ball3': 'roomB', 'at_ball4': 'roomB'})
+
+
+monkey_domain = STRIPS_domain(
+    {'m_loc': {'l1', 'l2', 'l3'}, 'b_loc': {'l1', 'l2', 'l3'}, 
+     'box_loc': {'l1', 'l2', 'l3'}, 'on_box': {True, False}, 'has_bananas': {True, False}},
+    {
+        Strips('go_l1', {'on_box': False}, {'m_loc': 'l1'}),
+        Strips('go_l2', {'on_box': False}, {'m_loc': 'l2'}),
+        Strips('go_l3', {'on_box': False}, {'m_loc': 'l3'}),
+        
+        Strips('push_box_l1', {'on_box': False, 'm_loc': 'l2', 'box_loc': 'l2'}, {'m_loc': 'l1', 'box_loc': 'l1'}),
+        Strips('push_box_l2', {'on_box': False, 'm_loc': 'l1', 'box_loc': 'l1'}, {'m_loc': 'l2', 'box_loc': 'l2'}),
+        Strips('push_box_l3', {'on_box': False, 'm_loc': 'l2', 'box_loc': 'l2'}, {'m_loc': 'l3', 'box_loc': 'l3'}),
+        
+        Strips('climb_on', {'m_loc': 'l1', 'box_loc': 'l1'}, {'on_box': True}),
+        Strips('climb_on', {'m_loc': 'l2', 'box_loc': 'l2'}, {'on_box': True}),
+        Strips('climb_on', {'m_loc': 'l3', 'box_loc': 'l3'}, {'on_box': True}),
+
+        Strips('grasp_bananas', {'on_box': True, 'm_loc': 'l3', 'b_loc': 'l3'}, {'has_bananas': True})
+    }
+)
+
+monkey_problem = Planning_problem(monkey_domain,
+    {'m_loc': 'l1', 'box_loc': 'l2', 'b_loc': 'l3', 'on_box': False, 'has_bananas': False},
+    {'has_bananas': True})
