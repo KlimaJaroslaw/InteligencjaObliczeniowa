@@ -193,3 +193,86 @@ monkey_domain = STRIPS_domain(
 monkey_problem = Planning_problem(monkey_domain,
     {'m_loc': 'l1', 'box_loc': 'l2', 'b_loc': 'l3', 'on_box': False, 'has_bananas': False},
     {'has_bananas': True})
+
+# --- Problemy z podcelami na 6 punktów ---
+
+# Gripper z podcelami: najpierw ball1 i ball2, potem reszta
+gripper_problem_subgoal1 = Planning_problem(gripper_dom,
+    initial_gripper,
+    {'at_ball1': 'roomB', 'at_ball2': 'roomB'})
+
+gripper_problem_subgoal2 = Planning_problem(gripper_dom,
+    {'rob_at': 'roomA', 'free_left': True, 'free_right': True,
+     'at_ball1': 'roomB', 'at_ball2': 'roomB', 'at_ball3': 'roomA', 'at_ball4': 'roomA'},
+    {'at_ball1': 'roomB', 'at_ball2': 'roomB', 'at_ball3': 'roomB', 'at_ball4': 'roomB'})
+
+# BlockWorld z podcelami: najpierw przygotuj bloki
+blocks2_subgoal1 = Planning_problem(blocks2dom,
+     tower4,
+     {on('d'):'c', on('c'):'b'})
+
+blocks2_subgoal2 = Planning_problem(blocks2dom,
+     {clear('a'):True, on('a'):'table', clear('b'):True, on('b'):'table',
+      clear('c'):False, on('c'):'b', clear('d'):False, on('d'):'c'},
+     {on('d'):'c', on('c'):'b', on('b'):'a'})
+
+# Monkey z podcelami: najpierw dotarć do pudełka
+monkey_problem_subgoal1 = Planning_problem(monkey_domain,
+    {'m_loc': 'l1', 'box_loc': 'l2', 'b_loc': 'l3', 'on_box': False, 'has_bananas': False},
+    {'m_loc': 'l2', 'box_loc': 'l2'})
+
+monkey_problem_subgoal2 = Planning_problem(monkey_domain,
+    {'m_loc': 'l2', 'box_loc': 'l2', 'b_loc': 'l3', 'on_box': False, 'has_bananas': False},
+    {'has_bananas': True})
+
+# --- Dodatkowe problemy z podcelami na 8 punktów ---
+
+def make_gripper_state(num_balls, balls_in_roomB):
+    state = {'rob_at': 'roomA', 'free_left': True, 'free_right': True}
+    for i in range(1, num_balls + 1):
+        state[f'at_ball{i}'] = 'roomB' if i in balls_in_roomB else 'roomA'
+    return state
+
+# Problem A: 8 piłek (minimum 20 akcji: 4 pary * 5)
+gripper8_dom = create_gripper_world(8)
+gripper8_goal = {f'at_ball{i}': 'roomB' for i in range(1, 9)}
+
+gripper8_subgoal1 = Planning_problem(gripper8_dom,
+    make_gripper_state(8, set()),
+    {f'at_ball{i}': 'roomB' for i in range(1, 5)})
+
+gripper8_subgoal2 = Planning_problem(gripper8_dom,
+    make_gripper_state(8, {1, 2, 3, 4}),
+    gripper8_goal)
+
+# Problem B: 10 piłek (minimum 25 akcji: 5 par * 5)
+gripper10_dom = create_gripper_world(10)
+gripper10_goal = {f'at_ball{i}': 'roomB' for i in range(1, 11)}
+
+gripper10_subgoal1 = Planning_problem(gripper10_dom,
+    make_gripper_state(10, set()),
+    {f'at_ball{i}': 'roomB' for i in range(1, 5)})
+
+gripper10_subgoal2 = Planning_problem(gripper10_dom,
+    make_gripper_state(10, {1, 2, 3, 4}),
+    {f'at_ball{i}': 'roomB' for i in range(1, 9)})
+
+gripper10_subgoal3 = Planning_problem(gripper10_dom,
+    make_gripper_state(10, {1, 2, 3, 4, 5, 6, 7, 8}),
+    gripper10_goal)
+
+# Problem C: 12 piłek (minimum 30 akcji: 6 par * 5)
+gripper12_dom = create_gripper_world(12)
+gripper12_goal = {f'at_ball{i}': 'roomB' for i in range(1, 13)}
+
+gripper12_subgoal1 = Planning_problem(gripper12_dom,
+    make_gripper_state(12, set()),
+    {f'at_ball{i}': 'roomB' for i in range(1, 5)})
+
+gripper12_subgoal2 = Planning_problem(gripper12_dom,
+    make_gripper_state(12, {1, 2, 3, 4}),
+    {f'at_ball{i}': 'roomB' for i in range(1, 9)})
+
+gripper12_subgoal3 = Planning_problem(gripper12_dom,
+    make_gripper_state(12, {1, 2, 3, 4, 5, 6, 7, 8}),
+    gripper12_goal)
