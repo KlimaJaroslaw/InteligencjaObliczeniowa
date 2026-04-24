@@ -5,7 +5,9 @@ __pycache__/
 *.zip
 # C extensions
 *.so
-
+*.csv
+logs
+tb_logs
 # Distribution / packaging
 .Python
 build/
