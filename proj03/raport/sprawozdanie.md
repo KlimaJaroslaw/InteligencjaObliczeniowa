@@ -112,7 +112,7 @@ Architektura PPO ma ten sam układ warstw, ale wejście ma postać `float32[1,12
 
 Symulację wykonano z wyłączonym trybem eksploracji, więc agent działał deterministycznie i w każdej sytuacji wybierał najlepszą akcję wynikającą z wyuczonej polityki. Pomiar przeprowadzono na 5 epizodach.
 
-Średnia nagroda wyniosła `242.17 +/- 114.15`, pomiar przeprowadzoną na 5 przebiegach.
+Średnia nagroda wyniosła `242.17 +/- 114.15`.
 
 ## 7. Wnioski
 
